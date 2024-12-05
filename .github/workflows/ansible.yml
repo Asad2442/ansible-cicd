@@ -10,22 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install Ansible
+      # Step 2: Install Ansible and sshpass
+      - name: Install Ansible and sshpass
         run: |
-          sudo apt update
-          sudo apt install -y ansible sshpass
+          sudo apt-get update
+          sudo apt-get install -y ansible sshpass
 
-      - name: Run Ansible Playbook
+      # Step 3: Add SSH password for Ansible authentication
+      - name: Add SSH password and run Ansible playbook
         run: |
-          ansible-playbook -i inventory.ini playbooks/install-node.yml
+          # Use sshpass to provide the SSH password for Ansible
+          sshpass -p "${{ secrets.ANSIBLE_SSH_PASS }}" ansible-playbook -i inventory.ini playbooks/install-node.yml
         env:
-          ANSIBLE_HOST_KEY_CHECKING: 'False'
-          ANSIBLE_SSH_PASS: ${{ secrets.ANSIBLE_SSH_PASS }}
+          ANSIBLE_HOST_KEY_CHECKING: 'False'  # Disable SSH key checking (optional)
