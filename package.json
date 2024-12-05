@@ -1,0 +1,15 @@
+{
+  "name": "ansible-cicd",
+  "version": "1.0.0",
+  "description": "Lab 4: CI/CD with Ansible",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
