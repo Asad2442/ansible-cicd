@@ -10,20 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      # Step 2: Install Ansible and sshpass
-      - name: Install Ansible and sshpass
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y ansible sshpass
+    - name: Install Ansible and sshpass
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ansible sshpass
 
-      # Step 3: Add SSH password for Ansible authentication
-      - name: Add SSH password and run Ansible playbook
-        run: |
-          # Use sshpass to provide the SSH password for Ansible
-          sshpass -p "${{ secrets.ANSIBLE_SSH_PASS }}" ansible-playbook -i inventory.ini playbooks/install-node.yml
-        env:
-          ANSIBLE_HOST_KEY_CHECKING: 'False'  # Disable SSH key checking (optional)
+    - name: Add SSH password and run Ansible playbook
+      run: |
+        # Disable host key checking to avoid errors with unknown hosts
+        echo "Host *" >> ~/.ssh/config
+        echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+        echo "  UserKnownHostsFile=/dev/null" >> ~/.ssh/config
+        
+        # Use sshpass to provide the SSH password for Ansible
+        sshpass -p "${{ secrets.ANSIBLE_SSH_PASS }}" ansible-playbook -i inventory.ini playbooks/install-node.yml
+      env:
+        ANSIBLE_HOST_KEY_CHECKING: 'False'
